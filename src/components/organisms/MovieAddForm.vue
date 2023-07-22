@@ -3,24 +3,13 @@
     <h1>Yangi kino qo'shish</h1>
     <form action="" class="add-form d-flex gap-4">
       <InputB
-        :value="this.selectedMovie?.name"
+        v-model="this.selectedMovie.name"
         class="new-movie-label"
         placeholder="Qanday kino?"
-        @input="
-          (e) => {
-            setSelectedMovie({ ...this.selectedMovie, name: e.target.value })
-          }
-        "
       />
       <InputB
-        :value="this.selectedMovie?.viewers"
-        class="new-movie-label"
+        v-model="this.selectedMovie.viewers"
         placeholder="Nechi marotaba ko'rilgan?"
-        @input="
-          (e) => {
-            setSelectedMovie({ ...this.selectedMovie, viewers: e.target.value })
-          }
-        "
         type="number"
       />
       <ButtonB
@@ -34,13 +23,10 @@
   </div>
 </template>
 <script>
+console.log(this?.selectedMovie)
 export default {
   name: 'MovieAddForm',
   props: {
-    setSelectedMovie: {
-      type: Function,
-      required: true
-    },
     selectedMovie: {
       type: Object,
       required: true
