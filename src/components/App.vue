@@ -1,49 +1,97 @@
 <script>
-import AppInfo from '@/components/AppInfo.vue'
-import SearchPanel from './SearchPanel.vue'
-import AppFilter from './AppFilter.vue'
-import MovieList from './MovieList.vue'
-import MovieAddForm from './MovieAddForm.vue'
-
 export default {
-  components: {
-    AppInfo,
-    SearchPanel,
-    AppFilter,
-    MovieList,
-    MovieAddForm
-  },
   data() {
     return {
       movies: [
         {
           id: 1,
-          name: 'Kino nomi 1',
-          viewers: 811,
+          name: 'aaaa',
+          viewers: 450,
           favourite: true,
           like: false
         },
         {
           id: 2,
-          name: 'Kino nomi 2',
-          viewers: 812,
+          name: 'bbbb',
+          viewers: 550,
           favourite: false,
           like: false
         },
         {
           id: 3,
-          name: 'Kino nomi 3',
-          viewers: 813,
+          name: 'cccc',
+          viewers: 650,
           favourite: false,
           like: true
+        },
+        {
+          id: 4,
+          name: 'dddd',
+          viewers: 750,
+          favourite: false,
+          like: false
         }
-      ]
+      ],
+      searchText: '',
+      filter: 'all',
+      selectedMovie: { name: '', viewers: '' }
     }
   },
+
   methods: {
-    createMovie(newM) {
-      if (newM.name) {
-        this.movies.push(newM)
+    setSearchText(searchText) {
+      if (searchText.length) {
+        this.searchText = searchText
+      } else {
+        this.searchText = ''
+      }
+    },
+    onSearch(arr, searchText) {
+      if (searchText.length === 0) {
+        return arr
+      } else {
+        return arr.filter((m) => m.name.toLowerCase().includes(searchText.toLowerCase()))
+      }
+    },
+    setFilter(filter) {
+      if (filter.length) {
+        this.filter = filter
+      } else {
+        this.filter = ''
+      }
+    },
+    onFilter(arr, filter) {
+      switch (filter) {
+        case 'liked':
+          return arr.filter((m) => m.like === true)
+        case 'most_viewers':
+          return arr.filter((m) => m.viewers > 600)
+        default:
+          return arr
+      }
+    },
+    createMovie(item) {
+      if (item?.id === this.selectedMovie?.id) {
+        this.onRemove3(item?.id, item)
+        this.selectedMovie = {}
+      } else {
+        if (item?.name) {
+          this.movies.push(item)
+          this.setSelectedMovie({})
+        }
+      }
+    },
+    setSelectedMovie(item) {
+      if (item?.id) {
+        this.selectedMovie = {
+          id: item?.id,
+          name: item?.name,
+          viewers: item?.viewers,
+          favourite: item?.favourite,
+          like: item?.like
+        }
+      } else {
+        this.selectedMovie = item
       }
     },
     onLike3(id) {
@@ -54,13 +102,23 @@ export default {
       })
     },
     onFavourite3(id) {
-      console.log(id)
       this.movies.forEach((m) => {
         if (m?.id === id) {
           m.favourite = !m.favourite
         }
       })
-      console.log(this.movies)
+    },
+    onRemove3(id, item) {
+      for (let i = 0; i < this.movies.length; i++) {
+        const m = this.movies[i]
+        if (m?.id == id) {
+          if (item?.id) {
+            this.movies.splice(i, 1, item)
+          } else {
+            this.movies.splice(i, 1)
+          }
+        }
+      }
     }
   }
 }
@@ -72,12 +130,22 @@ export default {
         :allMoviesCount="movies.length"
         :vavouriteMoviesCount="movies.filter((m) => m?.favourite).length"
       />
-      <div class="search-panel">
-        <SearchPanel />
-        <AppFilter />
+      <div class="box">
+        <SearchPanel :setSearchText="setSearchText" :searchText="searchText" />
+        <AppFilter :setFilter="setFilter" :filter="filter" />
       </div>
-      <MovieList :movies="movies" @onLike2="onLike3" @onFavourite2="onFavourite3" />
-      <MovieAddForm @createMovie="createMovie" />
+      <MovieList
+        :movies="onFilter(onSearch(movies, searchText), filter)"
+        @onLike2="onLike3"
+        @onFavourite2="onFavourite3"
+        @onRemove2="onRemove3"
+        :setSelectedMovie="setSelectedMovie"
+      />
+      <MovieAddForm
+        @createMovie="createMovie"
+        :selectedMovie="selectedMovie"
+        :setSelectedMovie="setSelectedMovie"
+      />
     </div>
   </div>
 </template>
@@ -94,12 +162,5 @@ export default {
   background-color: rgb(255, 255, 255);
   margin: 0 auto;
   padding: 5rem 0;
-}
-.search-panel {
-  margin-top: 2rem;
-  padding: 1.5rem;
-  background-color: #fcfaf5;
-  border-radius: 4px;
-  box-shadow: 15px 15px 15px rgba(0, 0, 0, 0.15);
 }
 </style>
