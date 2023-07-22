@@ -34,7 +34,8 @@ export default {
       ],
       searchText: '',
       filter: 'all',
-      selectedMovie: { name: '', viewers: '' }
+      selectedMovie: { name: '', viewers: '' },
+      show: false
     }
   },
 
@@ -74,15 +75,18 @@ export default {
       if (item?.id === this.selectedMovie?.id) {
         this.onRemove3(item?.id, item)
         this.selectedMovie = {}
+        this.show = false
       } else {
         if (item?.name) {
           this.movies.push(item)
           this.setSelectedMovie({})
+          this.show = false
         }
       }
     },
     setSelectedMovie(item) {
       if (item?.id) {
+        this.show = true
         this.selectedMovie = {
           id: item?.id,
           name: item?.name,
@@ -91,6 +95,7 @@ export default {
           like: item?.like
         }
       } else {
+        this.show = true
         this.selectedMovie = item
       }
     },
@@ -119,7 +124,16 @@ export default {
           }
         }
       }
+    },
+    setShow() {
+      this.show = !this.show
     }
+  },
+  mounted() {
+    console.log('Mounted')
+  },
+  updated() {
+    console.log('Updated')
   }
 }
 </script>
@@ -132,18 +146,19 @@ export default {
       />
       <div class="box">
         <SearchPanel :setSearchText="setSearchText" :searchText="searchText" />
-        <AppFilter :setFilter="setFilter" :filter="filter" />
+        <AppFilter :setFilter="setFilter" :filter="filter" :setShow="setShow" :show="show" />
       </div>
+      <MovieAddForm
+        v-if="this.show"
+        @createMovie="createMovie"
+        :selectedMovie="selectedMovie"
+        :setSelectedMovie="setSelectedMovie"
+      />
       <MovieList
         :movies="onFilter(onSearch(movies, searchText), filter)"
         @onLike2="onLike3"
         @onFavourite2="onFavourite3"
         @onRemove2="onRemove3"
-        :setSelectedMovie="setSelectedMovie"
-      />
-      <MovieAddForm
-        @createMovie="createMovie"
-        :selectedMovie="selectedMovie"
         :setSelectedMovie="setSelectedMovie"
       />
     </div>

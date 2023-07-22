@@ -15,7 +15,7 @@ export default {
 </script>
 <template>
   <ul class="box list-group">
-    <li class="list-group-item d-flex justify-content-between text-info">
+    <li class="list-group-item d-flex justify-content-between text-light bg-secondary">
       <div class="list-group-item-name">name</div>
       <div class="list-group-item-viewers text-left">view</div>
       <div class="action">action</div>

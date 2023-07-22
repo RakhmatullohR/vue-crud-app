@@ -17,13 +17,12 @@
         :class="[selectedMovie?.id ? 'btn-primary' : 'btn-secondary']"
         @click="addMovie"
       >
-        {{ selectedMovie?.id ? 'Yangilash' : "Qo'shish" }}
+        {{ selectedMovie?.id ? 'Yangilash' : "Saqlash" }}
       </ButtonB>
     </form>
   </div>
 </template>
 <script>
-console.log(this?.selectedMovie)
 export default {
   name: 'MovieAddForm',
   props: {
@@ -44,6 +43,9 @@ export default {
       }
       this.$emit('createMovie', newMovie)
     }
+  },
+  unmounted() {
+    console.log('unmounted')
   }
 }
 </script>
