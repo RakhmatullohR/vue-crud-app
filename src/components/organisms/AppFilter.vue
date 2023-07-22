@@ -40,7 +40,7 @@ export default {
     return {
       buttonsData: [
         { title: 'Barcha kinolar', key: 'all' },
-        { title: 'Mashxur kinolar', key: 'liked' },
+        { title: 'Yoqqan kinolar', key: 'liked' },
         { title: "Ko'p ko'rilgan kinolar", key: 'most_viewers' }
       ]
     }

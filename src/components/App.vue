@@ -1,41 +1,44 @@
 <script>
+import axios from 'axios'
 export default {
   data() {
     return {
       movies: [
-        {
-          id: 1,
-          name: 'aaaa',
-          viewers: 450,
-          favourite: true,
-          like: false
-        },
-        {
-          id: 2,
-          name: 'bbbb',
-          viewers: 550,
-          favourite: false,
-          like: false
-        },
-        {
-          id: 3,
-          name: 'cccc',
-          viewers: 650,
-          favourite: false,
-          like: true
-        },
-        {
-          id: 4,
-          name: 'dddd',
-          viewers: 750,
-          favourite: false,
-          like: false
-        }
+        // {
+        //   id: 1,
+        //   name: 'aaaa',
+        //   viewers: 450,
+        //   favourite: true,
+        //   like: false
+        // },
+        // {
+        //   id: 2,
+        //   name: 'bbbb',
+        //   viewers: 550,
+        //   favourite: false,
+        //   like: false
+        // },
+        // {
+        //   id: 3,
+        //   name: 'cccc',
+        //   viewers: 650,
+        //   favourite: false,
+        //   like: true
+        // },
+        // {
+        //   id: 4,
+        //   name: 'dddd',
+        //   viewers: 750,
+        //   favourite: false,
+        //   like: false
+        // }
       ],
       searchText: '',
       filter: 'all',
       selectedMovie: { name: '', viewers: '' },
-      show: false
+      show: false,
+      isLoading: false,
+      errorMessage: ''
     }
   },
 
@@ -127,10 +130,44 @@ export default {
     },
     setShow() {
       this.show = !this.show
+    },
+    async fetchData() {
+      this.isLoading = true
+      try {
+        return await axios
+          .get('https://jsonplaceholder.typicode.com/todos?completed=true&_limit=10')
+          .then(({ data }) => {
+            this.isLoading = false
+            return data
+          })
+          .catch((err) => {
+            this.isLoading = false
+            throw err
+          })
+          .finally(() => {
+            this.isLoading = false
+          })
+      } catch (error) {
+        this.isLoading = false
+        this.errorMessage = error.message
+        let e = error
+        return e
+      }
     }
   },
   mounted() {
-    console.log('Mounted')
+    this.fetchData().then((dataList) => {
+      const newMovies = dataList?.map((item) => {
+        return {
+          id: item?.id,
+          name: item?.title,
+          viewers: item?.id * 50,
+          favourite: false,
+          like: false
+        }
+      })
+      this.movies = newMovies
+    })
   },
   updated() {
     console.log('Updated')
@@ -160,6 +197,8 @@ export default {
         @onFavourite2="onFavourite3"
         @onRemove2="onRemove3"
         :setSelectedMovie="setSelectedMovie"
+        :isLoading="isLoading"
+        :errorMessage="errorMessage"
       />
     </div>
   </div>

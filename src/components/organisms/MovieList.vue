@@ -2,6 +2,14 @@
 export default {
   name: 'MovieList',
   props: {
+    isLoading: {
+      type: Boolean,
+      required: true
+    },
+    errorMessage: {
+      type: String,
+      required: true
+    },
     movies: {
       type: Array,
       required: true
@@ -14,7 +22,7 @@ export default {
 }
 </script>
 <template>
-  <ul class="box list-group">
+  <ul v-if="movies.length > 0" class="box list-group">
     <li class="list-group-item d-flex justify-content-between text-light bg-secondary">
       <div class="list-group-item-name">name</div>
       <div class="list-group-item-viewers text-left">view</div>
@@ -30,9 +38,23 @@ export default {
       :setSelectedMovie="setSelectedMovie"
     />
   </ul>
+  <div class="loader-box text-info font-weight-bold" v-if="movies?.length === 0 && !isLoading">
+    There is no any data!
+  </div>
+  <div class="loader-box" v-if="isLoading"><Loader /></div>
+  <div class="loader-box text-danger font-weight-bold" v-if="errorMessage?.length > 0">
+    {{ errorMessage }}
+  </div>
 </template>
 
 <style scoped>
+.loader-box {
+  height: 400px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .list-group {
   max-height: 570px;
   overflow-y: auto;
