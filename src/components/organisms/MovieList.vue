@@ -33,6 +33,31 @@ export default {
 </template>
 
 <style scoped>
+.list-group {
+  max-height: 570px;
+  overflow-y: auto;
+}
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey;
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: rgb(153, 153, 153);
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #807f7f;
+}
 .action {
   min-width: 164px;
   font-size: 20px;

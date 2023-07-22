@@ -173,9 +173,8 @@ export default {
 }
 .content {
   max-width: 1000px;
-  min-height: 700px;
+  height: 100%;
   background-color: rgb(255, 255, 255);
   margin: 0 auto;
-  padding: 5rem 0;
 }
 </style>

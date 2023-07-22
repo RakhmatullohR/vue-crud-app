@@ -1,6 +1,6 @@
 <template>
   <div class="box">
-    <p class="fs-3 text-uppercase">Barcha kinolar soni: {{ allMoviesCount }}</p>
+    <p class="fs-4 text-uppercase">Barcha kinolar soni: {{ allMoviesCount }}</p>
     <p class="fs-4 text-uppercase">Yoqqan kinolar soni: {{ vavouriteMoviesCount }}</p>
   </div>
 </template>
